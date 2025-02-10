@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDirs": ["server"],
+    "outDir": "dist",
+    "lib": ["es2022"],
+    "target": "es2022",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
