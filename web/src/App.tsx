@@ -1,22 +1,22 @@
+import { Route, Routes } from "react-router";
+import "./App.css";
+import Homepage from "./pages/Homepage";
+import Navbar from "./components/Navbar";
 
-
-import { Route, Routes } from 'react-router'
-import './App.css'
-import Login from './pages/Login'
-import Homepage from './pages/Homepage'
+import Particles from "./components/Particles";
 
 function App() {
 
-
   return (
     <>
-    <Routes>
-      <Route path="/" element={<Homepage/>} />
-      <Route path="/login" element={<Login/>} />
-    </Routes>
 
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+      </Routes>
+      <Particles/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 const deckResolver = {
   Query: {
     decks: async () => {
-      return await prisma.deck.findMany({include: { categories: true, cards: true }});
+      return await prisma.deck.findMany({ include: { categories: true, cards: true } });
     },
     deck: async (_, { id }) => {
       return await prisma.deck.findUnique({
@@ -14,31 +14,58 @@ const deckResolver = {
     },
   },
   Mutation: {
-    createDeck: async (_, { title, userId, categories }) => {
+    createDeck: async (_, { title, categories },{user}) => {
+      if (!user) {
+        throw new Error("You must be logged in to create a deck");
+      }
       const deckCats = [];
       for (const cat of categories) {
         deckCats.push({ create: { name: cat }, where: { name: cat } });
       }
+    
       return await prisma.deck.create({
         data: {
           title,
-          userId: parseInt(userId),
+          userId: user.id,
           categories: { connectOrCreate: deckCats },
         },
       });
     },
-    updateDeck: async (_, { id, title, userId }) => {
-      const deck = await prisma.deck.update({
+    updateDeck: async (_, { id, title, categories }, {user}) => {
+      const deck = await prisma.deck.findUnique({ where: { id } });
+      if (!deck) {
+        throw new Error("Deck not found");
+      }
+
+      if (deck.userId !== user.id) {
+        throw new Error("You are not authorized to update this deck");
+      }
+      const deckCats = [];
+
+
+      for (const cat of categories) {
+        deckCats.push({ create: { name: cat }, where: { name: cat } });
+      }
+      const updatedDeck = await prisma.deck.update({
         where: { id },
-        data: { title, userId },
+        data: {
+          title,
+          categories: {
+        set: [],
+        connectOrCreate: deckCats
+          }
+        }
       });
-      return deck;
+      return updatedDeck;
     },
-    deleteDeck: async (_, { id }) => {
+    deleteDeck: async (_, { id },{user}) => {
       try {
-        const deck = await prisma.deck.delete({ where: { id:parseInt(id) } });
+        const deck = await prisma.deck.findUnique({ where: { id: parseInt(id) } });
+        if (deck.userId !== user.id) {
+          throw new Error("You are not authorized to delete this deck");
+        }
         if (deck) {
-          await prisma.deck.delete({ where: { id:parseInt(id) } });
+          await prisma.deck.delete({ where: { id: parseInt(id) } });
           return true;
         } else {
           return false;

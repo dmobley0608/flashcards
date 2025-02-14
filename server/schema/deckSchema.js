@@ -2,8 +2,7 @@ const deckSchema = `#graphql
   type Deck {
     id: Int
     title: String
-    userId: Int
-    user: User
+    userId: String
     categories: [Category]
     cards: [FlashCard]
     createdAt: String
@@ -16,10 +15,10 @@ const deckSchema = `#graphql
   }
 
   type Mutation {
-    createDeck(title: String!, userId: ID!, categories: [String!]!): Deck!
-    updateDeck(id: ID!, title: String, userId: ID): Deck
-    deleteDeck(id: ID!): Boolean!
-    addCard(deckId: ID!, question: String!, answer: String!): FlashCard!
+    createDeck(title: String!, userId:String categories: [String!]!): Deck!
+    updateDeck(id: Int!, title: String, categories:[String]): Deck
+    deleteDeck(id: Int!): Boolean!
+    addCard(deckId: Int!, question: String!, answer: String!): FlashCard!
   }
 `;
 
