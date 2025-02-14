@@ -60,3 +60,100 @@ body {
 .particle:nth-child(3n+2) {
   animation-delay: 4s;
 }
+
+@keyframes fallIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) rotate(0deg);
+    z-index: 50;
+  }
+  60% {
+    transform: translateY(10px) rotate(var(--rotation));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rotation));
+  }
+}
+
+@keyframes fallOut {
+  0% {
+    transform: translateY(0) rotate(var(--rotation));
+    opacity: 1;
+    z-index: 50;
+  }
+  100% {
+    transform: translateY(100vh) rotate(calc(var(--rotation) + 45deg));
+    opacity: 0;
+  }
+}
+
+.fall-animation {
+  pointer-events: none;
+
+}
+
+.card-stack-item {
+  --rotation: 0deg;
+  transition: transform .3s ease-in-out;
+}
+
+.card-stack-item:hover {
+  transform: translateY(-15px) rotate(var(--rotation)) !important;
+}
+
+.circle-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-timer svg {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.circle-timer text {
+  transform: rotate(90deg);
+  transform-origin: 50% 50%;
+}
+
+.scoreboard {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.score-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-size: 24px;
+  font-weight: bold;
+  gap: 8px;
+}
+
+.score-divider {
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+.score-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.score-value {
+  color: #50fa7b;
+}
+
+.score-total {
+  opacity: 0.8;
+}

@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -10,34 +11,30 @@ datasource db {
   url      = "file:../dev.db"
 }
 
-
-
 model Deck {
-  id  Int @id @default(autoincrement())
-  title String
+  id         Int         @id @default(autoincrement())
+  title      String
   categories Category[]
-  cards FlashCard[]
-  userId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  cards      FlashCard[]
+  userId     String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model Category {
-  id Int @id @default(autoincrement())
-  name String @unique
-  decks Deck[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  decks     Deck[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
-
 model FlashCard {
-  id Int @id @default(autoincrement())
-  question String
-  answer String
-  deck Deck @relation(fields: [deckId], references: [id])
-  deckId Int
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  deck      Deck     @relation(fields: [deckId], references: [id])
+  deckId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

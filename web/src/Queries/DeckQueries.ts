@@ -62,3 +62,17 @@ export const ADD_CARD = gql`
     }
   }
 `;
+
+export const GET_DECK = gql`
+  query getDeck($id: Int!) {
+    deck(id: $id) {
+      id
+      title
+      cards {
+        id
+        question
+        answer
+      }
+    }
+  }
+`;

@@ -22,7 +22,7 @@ const deckResolver = {
       for (const cat of categories) {
         deckCats.push({ create: { name: cat }, where: { name: cat } });
       }
-    
+
       return await prisma.deck.create({
         data: {
           title,
@@ -61,10 +61,15 @@ const deckResolver = {
     deleteDeck: async (_, { id },{user}) => {
       try {
         const deck = await prisma.deck.findUnique({ where: { id: parseInt(id) } });
+
         if (deck.userId !== user.id) {
           throw new Error("You are not authorized to delete this deck");
         }
         if (deck) {
+          const cards = await prisma.flashCard.findMany({ where: { deckId: parseInt(id) } });
+          if (cards.length > 0) {
+            await prisma.flashCard.deleteMany({ where: { deckId: parseInt(id) } });
+          }
           await prisma.deck.delete({ where: { id: parseInt(id) } });
           return true;
         } else {
