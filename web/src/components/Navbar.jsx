@@ -1,7 +1,7 @@
 import React from 'react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { Navbar as BootstrapNavbar, Nav, Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router';
+import {Link}  from 'react-router-dom';
 
 export default function Navbar() {
   return (

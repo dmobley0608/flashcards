@@ -83,9 +83,11 @@ export default function DeckCard({ deck }: DeckCardProps) {
                   </span>
                 ))}
               </div>
+              {auth.userId === deck.userId && (
               <button onClick={deleteCard} className="btn btn-link text-danger p-0 float-end" style={{ fontSize: "1.2rem" }}>
                 <Trash />
               </button>
+              )}
             </Card.Footer>
           </Card>
         </div>
