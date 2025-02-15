@@ -4,19 +4,55 @@ import Homepage from "./pages/Homepage";
 import Navbar from "./components/Navbar";
 import Particles from "./components/Particles";
 import DeckPage from "./pages/DeckPage";
+import ManageDecks from "./pages/ManageDecks";
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { useSession } from "@clerk/clerk-react";
 
-function App() {
+
+const App = () => {
+  const { session } = useSession();
+
+  const httpLink = createHttpLink({
+    uri: "https://fcapi.tccs.tech/graphql",
+  });
+
+  const authLink = setContext(async (_, { headers }) => {
+    // Get the token from Clerk session
+    const token = await session?.getToken();
+
+    // Return the headers to the context
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      },
+    };
+  });
+
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: "network-only",
+      },
+    },
+  });
+
+
+
   return (
-    <>
-      <div className="particles"></div>
+    <ApolloProvider client={client}>
       <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/deck/:id" element={<DeckPage />} />
+        <Route path="/manage" element={<ManageDecks />} />
       </Routes>
       <Particles />
-    </>
+    </ApolloProvider>
   );
-}
+};
 
 export default App;

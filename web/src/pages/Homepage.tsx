@@ -3,19 +3,41 @@ import { useState } from "react";
 import { GET_DECKS } from "../Queries/DeckQueries";
 import DeckContainer from "../components/deck/DeckContainer";
 import SearchBar from "../components/SearchBar";
+import { useUser } from "@clerk/clerk-react";
 
 export default function Homepage() {
   const { data, loading, error } = useQuery(GET_DECKS);
   const [filteredDecks, setFilteredDecks] = useState([]);
+  const [showMyDecks, setShowMyDecks] = useState(false);
+  const { user } = useUser();
 
-  const handleSearch = (searchTerm:string) => {
+  const handleSearch = (searchTerm: string) => {
+    filterDecks(searchTerm, showMyDecks);
+  };
+
+  const handleFilterMyDecks = (checked: boolean) => {
+    setShowMyDecks(checked);
+    filterDecks("", checked);
+  };
+
+  const filterDecks = (searchTerm: string, onlyMyDecks: boolean) => {
     if (!data?.decks) return;
 
-    const filtered = data.decks.filter((deck: { id:number, name: string; category: { name: string; }; }) => {
-      const matchName = deck.title.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchCategory = deck.categories.some((category: { name: string; }) => category.name.toLowerCase().includes(searchTerm.toLowerCase()));
-      return matchName || matchCategory ;
-    });
+    let filtered = data.decks;
+
+    // Filter by user's decks if toggle is on
+    if (onlyMyDecks && user) {
+      filtered = filtered.filter((deck: { userId: string }) => deck.userId === user.id);
+    }
+
+    // Then apply search term filter
+    if (searchTerm) {
+      filtered = filtered.filter((deck: { title: string; categories: { name: string }[] }) => {
+        const matchName = deck.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchCategory = deck.categories.some((category) => category.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        return matchName || matchCategory;
+      });
+    }
 
     setFilteredDecks(filtered);
   };
@@ -25,7 +47,7 @@ export default function Homepage() {
 
   return (
     <div className="container mt-4">
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} onFilterMyDecks={handleFilterMyDecks} />
       <DeckContainer decks={filteredDecks.length > 0 ? filteredDecks : data.decks} />
     </div>
   );

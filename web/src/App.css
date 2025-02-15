@@ -157,3 +157,36 @@ body {
 .score-total {
   opacity: 0.8;
 }
+
+#popover-categories {
+  border: none;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background-color: white;
+  width: 50vw;
+  max-width: 95vw;
+  visibility: hidden;
+  z-index: 100;
+  padding: .25rem 3rem;
+}
+#categoriesBtn:hover #popover-categories {
+  visibility: visible;
+}
+
+.popover-categories-arrow {
+  display: none !important;
+}
+
+#popover-categories .list-group .list-group-item {
+  transition: background-color 0.2s ease;
+  color: black !important;
+  text-decoration: none !important;
+
+}
+
+#popover-categories .list-group-item:hover {
+  background-color: #f8f9fa;
+  text-decoration: none;
+}

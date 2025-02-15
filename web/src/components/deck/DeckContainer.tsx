@@ -65,23 +65,10 @@ export default function DeckContainer({ decks }: DeckContainerProps) {
 
   return (
     <Container className="position-relative">
-      {isSignedIn && (
-        <>
-          <Button
-            variant="primary"
-            className="my-3"
-            onClick={() => setShowModal(true)}>
-            <Plus size={24} />
-          </Button>
-
-          <CreateDeckModal show={showModal} onHide={() => setShowModal(false)} onSubmit={handleCreateDeck} />
-          {newDeckId && <AddCardModal show={showAddCardModal} onHide={handleAddCardModalClose} deckId={newDeckId} isNewDeck={true} />}
-        </>
-      )}
 
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {decks.map((deck: { title: string; description: string; categories: [] }, index: React.Key) => (
-          <div className="col" key={index}>
+          <div className="col d-flex justify-content-center align-items-center" key={index}>
             <DeckCard deck={deck} />
           </div>
         ))}

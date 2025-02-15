@@ -6,35 +6,23 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-} from "@apollo/client";
+const PUBLISHABLE_KEY = "pk_test_YXNzdXJlZC1raXdpLTI1LmNsZXJrLmFjY291bnRzLmRldiQ";
 
-const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
-  cache: new InMemoryCache(),
-});
-
-
-const PUBLISHABLE_KEY = "pk_test_YXNzdXJlZC1raXdpLTI1LmNsZXJrLmFjY291bnRzLmRldiQ"
-
-if(!PUBLISHABLE_KEY){
-  throw new Error('Missing PUBLISHABLE KEY')
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing PUBLISHABLE KEY");
 }
 
 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <ApolloProvider client={client}>
-        <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-        <App />
-        </ClerkProvider>
-      </ApolloProvider>
-    </BrowserRouter>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <BrowserRouter>
+          <App />
+      </BrowserRouter>
+    </ClerkProvider>
   </StrictMode>
 );

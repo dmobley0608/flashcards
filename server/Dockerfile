@@ -15,5 +15,5 @@ COPY . .
 
 RUN mkdir -p /app/data
 
-EXPOSE 4000
+EXPOSE 4000:4000
 CMD ["npm", "start"]

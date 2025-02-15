@@ -12,9 +12,18 @@ const deckResolver = {
         include: { categories: true, cards: true },
       });
     },
+    userDecks: async (_, __, { user }) => {
+      if (!user) {
+        throw new Error("You must be logged in to view your decks");
+      }
+      return await prisma.deck.findMany({
+        where: { userId: user.id },
+        include: { categories: true, cards: true },
+      });
+    },
   },
   Mutation: {
-    createDeck: async (_, { title, categories },{user}) => {
+    createDeck: async (_, { title, categories }, { user }) => {
       if (!user) {
         throw new Error("You must be logged in to create a deck");
       }
@@ -31,7 +40,7 @@ const deckResolver = {
         },
       });
     },
-    updateDeck: async (_, { id, title, categories }, {user}) => {
+    updateDeck: async (_, { id, title, categories }, { user }) => {
       const deck = await prisma.deck.findUnique({ where: { id } });
       if (!deck) {
         throw new Error("Deck not found");
@@ -51,14 +60,14 @@ const deckResolver = {
         data: {
           title,
           categories: {
-        set: [],
-        connectOrCreate: deckCats
+            set: [],
+            connectOrCreate: deckCats
           }
         }
       });
       return updatedDeck;
     },
-    deleteDeck: async (_, { id },{user}) => {
+    deleteDeck: async (_, { id }, { user }) => {
       try {
         const deck = await prisma.deck.findUnique({ where: { id: parseInt(id) } });
 
@@ -93,6 +102,37 @@ const deckResolver = {
         },
       });
       return card;
+    },
+    deleteCard: async (_, { id }, { user }) => {
+      try {
+        const card = await prisma.flashCard.findUnique({ where: { id: parseInt(id) } });
+        const deck = await prisma.deck.findUnique({ where: { id: card.deckId } });
+
+        if (deck.userId !== user.id) {
+          throw new Error("You are not authorized to delete a card from this deck");
+        }
+
+        await prisma.flashCard.delete({ where: { id: parseInt(id) } });
+        return true;
+      } catch (error) {
+        console.error("Error deleting card:", error);
+        return false;
+      }
+    },
+    updateCard: async (_, { id, question, answer }, { user }) => {
+      const card = await prisma.flashCard.findUnique({ where: { id: parseInt(id) } });
+      const deck = await prisma.deck.findUnique({ where: { id: parseInt(card.deckId) } });
+      if (deck.userId !== user.id) {
+        throw new Error("You are not authorized to edit a card in this deck");
+      }
+      const updatedCard = await prisma.flashCard.update({
+        where: { id: parseInt(id) },
+        data: {
+          question,
+          answer,
+        },
+      });
+      return updatedCard;
     },
   },
 };

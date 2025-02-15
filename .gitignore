@@ -1,6 +1,7 @@
 # Node modules
 node_modules/
-
+#postgre
+postgres-data/
 # Build output
 dist/
 build/
@@ -28,3 +29,7 @@ yarn-error.log*
 .DS_Store
 *.log
 *.db
+
+# Prisma
+prisma/migrations/
+prisma/migration_lock.toml

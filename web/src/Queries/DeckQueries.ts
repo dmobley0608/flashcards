@@ -18,6 +18,24 @@ export const GET_DECKS = gql`
   }
 `;
 
+export const GET_DECKS_BY_USER_ID = gql`
+  query getDecksByUserId {
+    userDecks {
+      id
+      title
+      userId
+      cards {
+        id
+        question
+        answer
+      }
+      categories {
+        name
+      }
+    }
+  }
+`;
+
 export const CREATE_DECK = gql`
   mutation createDeck($title: String!, $categories: [String!]!) {
     createDeck(title: $title, categories: $categories) {
@@ -54,7 +72,7 @@ export const UPDATE_DECK = gql`
 `;
 
 export const ADD_CARD = gql`
-  mutation addCard($deckId: Int!, $question: String!, $answer: String!) {
+  mutation AddCard($deckId: Int!, $question: String!, $answer: String!) {
     addCard(deckId: $deckId, question: $question, answer: $answer) {
       id
       question
@@ -73,6 +91,22 @@ export const GET_DECK = gql`
         question
         answer
       }
+    }
+  }
+`;
+
+export const DELETE_CARD = gql`
+  mutation DeleteCard($id: Int!) {
+    deleteCard(id: $id)
+  }
+`;
+
+export const UPDATE_CARD = gql`
+  mutation UpdateCard($id: Int!, $question: String!, $answer: String!) {
+    updateCard(id: $id, question: $question, answer: $answer) {
+      id
+      question
+      answer
     }
   }
 `;

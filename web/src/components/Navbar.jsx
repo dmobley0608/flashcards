@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-import { Navbar as BootstrapNavbar, Nav, Container, Button } from 'react-bootstrap';
-import {Link}  from 'react-router-dom';
+import { Navbar as BootstrapNavbar, Nav, Container, Button, Overlay, Popover } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { GiCardRandom } from "react-icons/gi";
 
 export default function Navbar() {
+  const [showCategories, setShowCategories] = useState(false);
+  const target = React.useRef(null);
+
+  // Temporary categories array - will be replaced with API data later
+  const categories = [
+    "Mathematics",
+    "Science",
+    "History",
+    "Languages",
+    "Computer Science",
+    "Geography",
+    "Literature"
+  ];
+
+
   return (
     <BootstrapNavbar bg="white" expand="md" className="shadow-sm">
-      <Container>
+      <Container className='justify-content-start'>
         <BootstrapNavbar.Brand as={Link} to="/">
-          FlashCards
+         ⚡ FlashCards ⚡
         </BootstrapNavbar.Brand>
 
-        <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
-        <BootstrapNavbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto"></Nav>
-        <Nav>
+        <div className='d-flex justify-content-end ms-auto'>
           <SignedOut>
             <SignInButton mode="modal">
               <Button variant="primary">
@@ -23,11 +36,16 @@ export default function Navbar() {
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <UserButton >
+              <UserButton.MenuItems>
+                <UserButton.Link label='Manage Decks' labelIcon={<GiCardRandom size={'25px'}/>} href="/manage"/>
+
+              </UserButton.MenuItems>
+
+            </UserButton>
           </SignedIn>
-        </Nav>
-      </BootstrapNavbar.Collapse>
-    </Container>
-    </BootstrapNavbar >
+        </div>
+      </Container>
+    </BootstrapNavbar>
   );
 }

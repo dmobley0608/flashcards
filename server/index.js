@@ -32,13 +32,11 @@ const { url } = await startStandaloneServer(server, {
   },
   context: async ({ req }) => {
     const token = req.headers?.authorization?.split(' ')[1] || "";
-
     try{
       const  validToken  = await verifyToken(token,{secretKey:process.env.CLERK_SECRET_KEY});
       const user = await clerk.users.getUser(validToken.sub);
       return { user:{...user} };
     }catch(e){
-      console.log(e)
       return { user: null };
     }
     }
