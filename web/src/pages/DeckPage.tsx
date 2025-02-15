@@ -5,7 +5,7 @@ import { Card, Form, Button, Alert } from "react-bootstrap";
 import { GET_DECK } from "../Queries/DeckQueries";
 import CircleTimer from "../components/CircleTimer";
 import Scoreboard from "../components/Scoreboard";
-
+import Loader from "../components/Loader";
 export default function DeckPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -113,7 +113,7 @@ export default function DeckPage() {
     );
   }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader progress={53} />;
   if (error) return <div>Error: {error.message}</div>;
   if (!data?.deck?.cards?.length) return <div>No cards found in this deck</div>;
 

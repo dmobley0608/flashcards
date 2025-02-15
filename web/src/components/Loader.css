@@ -1,0 +1,74 @@
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #1a1a1a;
+}
+
+.lightning-loader {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.lightning {
+    position: absolute;
+    width: 4px;
+    height: 100px;
+    background-color: #fff;
+    border-radius: 2px;
+    filter: drop-shadow(0 0 10px #00ffff);
+    animation: lightning 1.5s infinite;
+}
+
+.lightning:nth-child(1) {
+    left: 30%;
+    animation-delay: 0s;
+}
+
+.lightning:nth-child(2) {
+    left: 50%;
+    animation-delay: 0.2s;
+}
+
+.lightning:nth-child(3) {
+    left: 70%;
+    animation-delay: 0.4s;
+}
+
+.progress-text {
+    color: #fff;
+    font-size: 24px;
+    margin-top: 20px;
+    font-family: monospace;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+@keyframes lightning {
+    0% {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    20% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    30% {
+        transform: scaleY(0.3);
+        opacity: 0.5;
+    }
+    35% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    45% {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+}

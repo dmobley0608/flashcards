@@ -7,6 +7,7 @@ import EditDeckModal from "../deck/EditDeckModal";
 import CreateDeckModal from "../deck/CreateDeckModal";
 import AddCardModal from "./AddCardModal";
 import EditCardModal from "./EditCardModal";
+import Loader from "../Loader";
 
 type DeckManagerProps = {
   decks: Array<{
@@ -15,10 +16,16 @@ type DeckManagerProps = {
     categories: { name: string }[];
     cards: { question: string; answer: string; id: number }[];
   }>;
+  loading?: boolean;
 };
 
-export default function DeckManager({ decks = [] }: DeckManagerProps) {
+export default function DeckManager({ decks = [], loading = false }: DeckManagerProps) {
   const [deleteDeck] = useMutation(DELETE_DECK, {
+    update(cache, { data: { deleteDeck } }) {
+      const normalizedId = cache.identify({ id: deleteDeck, __typename: "Deck" });
+      cache.evict({ id: normalizedId });
+      cache.gc();
+    },
     refetchQueries: [{ query: GET_DECKS_BY_USER_ID }],
   });
   const [showEditModal, setShowEditModal] = useState(false);
@@ -30,6 +37,11 @@ export default function DeckManager({ decks = [] }: DeckManagerProps) {
   const [selectedCard, setSelectedCard] = useState<any>(null);
 
   const [deleteCard] = useMutation(DELETE_CARD, {
+    update(cache, { data: { deleteCard } }) {
+      const normalizedId = cache.identify({ id: deleteCard, __typename: "FlashCard" });
+      cache.evict({ id: normalizedId });
+      cache.gc();
+    },
     refetchQueries: [{ query: GET_DECKS_BY_USER_ID }],
   });
 
@@ -64,6 +76,10 @@ export default function DeckManager({ decks = [] }: DeckManagerProps) {
     e.stopPropagation();
     callback();
   };
+
+  if (loading) {
+    return <Loader progress={75} />;
+  }
 
   return (
     <div>
@@ -106,7 +122,7 @@ export default function DeckManager({ decks = [] }: DeckManagerProps) {
               <ListGroup variant="flush">
                 {deck.cards.map((card, index) => (
                   <ListGroup.Item key={index} className="d-flex flex-wrap justify-content-between align-items-center">
-                     <div className="w-100 d-flex justify-content-between align-items-center">
+                    <div className="w-100 d-flex justify-content-between align-items-center">
                       <Button
                         variant="link"
                         className="p-0 me-2"
@@ -128,7 +144,6 @@ export default function DeckManager({ decks = [] }: DeckManagerProps) {
                       <strong>A: </strong>
                       {card.answer}
                     </div>
-
                   </ListGroup.Item>
                 ))}
               </ListGroup>

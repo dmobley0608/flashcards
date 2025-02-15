@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_DECKS_BY_USER_ID } from "../Queries/DeckQueries";
 import { Tab, Nav, Container, Row, Col, Card } from "react-bootstrap";
 import DeckManager from "../components/manage/DeckManager";
-
+import Loader from "../components/Loader";
 import { useAuth } from "@clerk/clerk-react";
 
 export default function ManageDecks() {
@@ -12,7 +12,7 @@ export default function ManageDecks() {
 
   const { loading, error, data } = useQuery(GET_DECKS_BY_USER_ID);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader progress={75}/></div>;
   if (error) return <div>Error: {error.message}</div>;
 
   const userDecks = data?.userDecks?.filter((deck: any) => deck.userId === userId);

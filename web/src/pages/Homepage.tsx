@@ -4,6 +4,7 @@ import { GET_DECKS } from "../Queries/DeckQueries";
 import DeckContainer from "../components/deck/DeckContainer";
 import SearchBar from "../components/SearchBar";
 import { useUser } from "@clerk/clerk-react";
+import Loader from "../components/Loader";
 
 export default function Homepage() {
   const { data, loading, error } = useQuery(GET_DECKS);
@@ -42,7 +43,10 @@ export default function Homepage() {
     setFilteredDecks(filtered);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <Loader progress={50} />;
+  }
+
   if (error) return <p>Error...</p>;
 
   return (
