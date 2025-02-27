@@ -1,0 +1,64 @@
+.analog-timer {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  margin: 0 15px;
+  color: black;
+}
+
+.timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.timer-background {
+  stroke: #dee2e6;
+  fill: none;
+}
+
+.timer-progress {
+  transition: stroke-dashoffset 0.3s linear;
+  transform-origin: center;
+  fill: none;
+}
+
+.timer-text {
+  font-size: 16px;
+  font-weight: bold;
+  fill: #212529;
+  transform: rotate(90deg);
+}
+
+.timer-number {
+  font-size: 20px;
+  font-weight: bold;
+  transform: rotate(90deg);
+  user-select: none;
+}
+
+@keyframes pulse-warning {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.analog-timer.warning {
+  animation: pulse-warning 1s infinite;
+}
+
+.analog-timer.warning .timer-progress {
+  filter: drop-shadow(0 0 2px rgba(220, 53, 69, 0.5));
+}
+
+.timer-progress,
+.timer-number {
+  transition: all 0.3s ease;
+}

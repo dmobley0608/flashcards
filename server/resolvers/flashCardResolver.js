@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import OpenAI from 'openai';
 
 const prisma = new PrismaClient();
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 const flashCardResolver = {
   Query: {
@@ -9,6 +13,44 @@ const flashCardResolver = {
     },
     flashCard: async (_, { id }) => {
       return await prisma.flashCard.findUnique({ where: { id } });
+    },
+    generateMultipleChoiceQuestions: async (_, { topic }) => {
+      const prompt = `Generate 10 multiple choice questions about ${topic}.
+        Return them in the following JSON format, and nothing else:
+        {
+          "questions": [
+            {
+              "question": "What is...",
+              "options": [
+                {"text": "option 1", "isCorrect": false},
+                {"text": "option 2", "isCorrect": true},
+                {"text": "option 3", "isCorrect": false},
+                {"text": "option 4", "isCorrect": false}
+              ]
+            }
+          ]
+        }`;
+
+      const completion = await openai.chat.completions.create({
+        messages: [{
+          role: "system",
+          content: "You are a helpful assistant that generates multiple choice questions. Always respond with valid JSON."
+        },
+        {
+          role: "user",
+          content: prompt
+        }],
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+      });
+
+      try {
+        const response = JSON.parse(completion.choices[0].message.content);
+        return response.questions;
+      } catch (error) {
+        console.error('Error parsing OpenAI response:', error);
+        throw new Error('Failed to generate questions');
+      }
     },
   },
   Mutation: {

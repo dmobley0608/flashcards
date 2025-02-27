@@ -6,6 +6,8 @@ import { GET_DECK } from "../Queries/DeckQueries";
 import CircleTimer from "../components/CircleTimer";
 import Scoreboard from "../components/Scoreboard";
 import Loader from "../components/Loader";
+
+
 export default function DeckPage() {
   const { id } = useParams();
   const navigate = useNavigate();

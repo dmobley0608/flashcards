@@ -5,10 +5,11 @@ import Navbar from "./components/Navbar";
 import Particles from "./components/Particles";
 import DeckPage from "./pages/DeckPage";
 import ManageDecks from "./pages/ManageDecks";
+import MultipleChoicePage from "./pages/MultipleChoicePage";
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { useSession } from "@clerk/clerk-react";
-
+import { LoaderProvider } from "./context/LoaderContext";
 
 const App = () => {
   const { session } = useSession();
@@ -40,18 +41,19 @@ const App = () => {
     },
   });
 
-
-
   return (
-    <ApolloProvider client={client}>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/deck/:id" element={<DeckPage />} />
-        <Route path="/manage" element={<ManageDecks />} />
-      </Routes>
-      <Particles />
-    </ApolloProvider>
+    <LoaderProvider>
+      <ApolloProvider client={client}>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/deck/:id" element={<DeckPage />} />
+          <Route path="/manage" element={<ManageDecks />} />
+          <Route path="/ai-questions" element={<MultipleChoicePage />} />
+        </Routes>
+        <Particles />
+      </ApolloProvider>
+    </LoaderProvider>
   );
 };
 

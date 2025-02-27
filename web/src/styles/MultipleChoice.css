@@ -1,0 +1,23 @@
+.timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.timer.text-danger {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

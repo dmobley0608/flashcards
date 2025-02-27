@@ -26,10 +26,7 @@ services:
         condition: service_healthy
     command: >
       sh -c "
-        rm -rf prisma/migrations &&
-        npx prisma migrate reset --force &&
         npx prisma generate &&
-        npx prisma db push &&
         npm start
       "
 

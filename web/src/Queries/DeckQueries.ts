@@ -110,3 +110,15 @@ export const UPDATE_CARD = gql`
     }
   }
 `;
+
+export const GENERATE_MULTIPLE_CHOICE = gql`
+  query GenerateMultipleChoice($topic: String!) {
+    generateMultipleChoiceQuestions(topic: $topic) {
+      question
+      options {
+        text
+        isCorrect
+      }
+    }
+  }
+`;

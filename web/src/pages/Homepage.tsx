@@ -5,6 +5,8 @@ import DeckContainer from "../components/deck/DeckContainer";
 import SearchBar from "../components/SearchBar";
 import { useUser } from "@clerk/clerk-react";
 import Loader from "../components/Loader";
+import { Button } from "react-bootstrap";
+import "../styles/AiButton.css";
 
 export default function Homepage() {
   const { data, loading, error } = useQuery(GET_DECKS);
@@ -47,10 +49,21 @@ export default function Homepage() {
     return <Loader progress={50} />;
   }
 
-  if (error) return <p>Error...</p>;
+  if (error)
+    return (
+      <p>
+        Error...<>{error.message}</>
+      </p>
+    );
 
   return (
     <div className="container mt-4">
+      <div className="ai-button-wrapper">
+        <Button href="/ai-questions" className="ai-button pulse">
+          <i className="fas fa-robot"></i>
+          Try AI-Powered Questions
+        </Button>
+      </div>
       <SearchBar onSearch={handleSearch} onFilterMyDecks={handleFilterMyDecks} />
       <DeckContainer decks={filteredDecks.length > 0 ? filteredDecks : data.decks} />
     </div>
